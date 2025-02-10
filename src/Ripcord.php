@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Ripcord;
+namespace Danielh\Ripcord;
 
-use App\Ripcord\Exceptions\ConfigurationException;
+use Danielh\Ripcord\Exceptions\ConfigurationException;
 
 /**
  * Ripcord is an easy to use XML-RPC library for PHP.
@@ -23,7 +23,7 @@ class Ripcord
     /**
      *  This method checks whether the given argument is an XML-RPC fault.
      *
-     * @param  mixed  $fault
+     * @param mixed $fault
      * @return bool
      */
     public static function isFault($fault)
@@ -38,8 +38,8 @@ class Ripcord
     /**
      *  This method generates an XML-RPC fault with the given code and message.
      *
-     * @param  int  $code
-     * @param  string  $message
+     * @param int $code
+     * @param string $message
      * @return array
      */
     public static function fault($code, $message)
@@ -52,15 +52,15 @@ class Ripcord
      * The server will publish any methods passed through the $services argument. It can be configured through
      * the $options argument.
      *
-     * @param  mixed  $services  Optional. Either an object or an array of objects. If the array has non-numeric keys, the key will be used as a namespace for the methods in the object.
-     * @param  array  $options  Optional. An array of options to set for the Ripcord server.
+     * @param mixed $services Optional. Either an object or an array of objects. If the array has non-numeric keys, the key will be used as a namespace for the methods in the object.
+     * @param array $options Optional. An array of options to set for the Ripcord server.
      *
      * @see Server
      */
     public static function server($services = null, $options = null, $documentor = null)
     {
         self::load('Ripcord_Server');
-        if (! isset($documentor)) {
+        if (!isset($documentor)) {
             $doc = ['name', 'css', 'wsdl', 'wsdl2'];
             $docOptions = [];
             foreach ($doc as $key) {
@@ -80,8 +80,8 @@ class Ripcord
      * This method returns a new Ripcord client. By default this will be an XML-RPC client, but you can change this
      * through the $options argument.
      *
-     * @param  string  $url  The url of the RPC server to connect with
-     * @param  array  $options  Optional. An array of options to set for the Ripcord client.
+     * @param string $url The url of the RPC server to connect with
+     * @param array $options Optional. An array of options to set for the Ripcord client.
      *
      * @throws ConfigurationException
      *
@@ -90,7 +90,7 @@ class Ripcord
     public static function client($url, $options = null, $transport = null): Client
     {
         self::load('Ripcord_Client');
-        if (! isset($transport)) {
+        if (!isset($transport)) {
             $transport = new TransportStream();
         }
 
@@ -100,7 +100,7 @@ class Ripcord
     /**
      * This method returns a new Ripcord documentor object.
      *
-     * @param  array  $options  Optional. An array of options to set for the Ripcord documentor.
+     * @param array $options Optional. An array of options to set for the Ripcord documentor.
      * @param object docCommentParser Optional. An object that parses a docComment block. Must
      * implement the Ripcord_Documentor_CommentParser interface.
      *
@@ -109,7 +109,7 @@ class Ripcord
     public static function documentor($options = null, $docCommentParser = null)
     {
         self::load('Ripcord_Documentor');
-        if (! $docCommentParser) {
+        if (!$docCommentParser) {
             $docCommentParser = new Ripcord_Documentor_Parser_phpdoc();
         }
 
@@ -119,7 +119,7 @@ class Ripcord
     /**
      * This method returns an XML-RPC datetime object from a given unix timestamp.
      *
-     * @param  int  $timestamp
+     * @param int $timestamp
      * @return object
      */
     public static function datetime($timestamp)
@@ -135,7 +135,7 @@ class Ripcord
      * It will throw a 'Variable is not of type datetime' Ripcord_Exception (code -6)
      * if the given argument is not of the correct type.
      *
-     * @param  object  $datetime
+     * @param object $datetime
      * @return int
      */
     public static function timestamp($datetime)
@@ -150,7 +150,7 @@ class Ripcord
     /**
      * This method returns an XML-RPC base64 object from a given binary string.
      *
-     * @param  string  $binary
+     * @param string $binary
      * @return object
      */
     public static function base64($binary)
@@ -165,7 +165,7 @@ class Ripcord
      * It will throw a 'Variable is not of type base64' Ripcord_Exception (code -7)
      * if the given argument is not of the correct type.
      *
-     * @param  object  $base64
+     * @param object $base64
      * @return string
      */
     public static function binary($base64)
@@ -181,7 +181,7 @@ class Ripcord
      * This method returns the type of the given parameter. This can be any of the XML-RPC data types, e.g.
      * 'struct', 'int', 'string', 'base64', 'boolean', 'double', 'array' or 'datetime'.
      *
-     * @param  mixed  $param
+     * @param mixed $param
      * @return string
      */
     public static function getType($param)
@@ -192,8 +192,8 @@ class Ripcord
     /**
      * This method returns a new Ripcord client, configured to access a SOAP 1.1 server.
      *
-     * @param  string  $url
-     * @param  array  $options  Optional.
+     * @param string $url
+     * @param array $options Optional.
      *
      * @see Client
      */
@@ -207,8 +207,8 @@ class Ripcord
     /**
      * This method returns a new Ripcord client, configured to access an XML-RPC server.
      *
-     * @param  string  $url
-     * @param  array  $options  Optional.
+     * @param string $url
+     * @param array $options Optional.
      * @return object
      *
      * @see Client
@@ -223,8 +223,8 @@ class Ripcord
     /**
      * This method returns a new Ripcord client, configured to access a Simple RPC server.
      *
-     * @param  string  $url
-     * @param  array  $options  Optional.
+     * @param string $url
+     * @param array $options Optional.
      * @return object
      *
      * @see Client
@@ -239,20 +239,20 @@ class Ripcord
     /**
      * This method includes a ripcord class, using require_once. Used for autoloading ripcord classes.
      *
-     * @param  string  $class  The name of the class to load.
+     * @param string $class The name of the class to load.
      * @return bool
      */
     public static function load($class)
     {
         if (substr($class, 0, 8) == 'Ripcord_') {
-            $root = dirname(__FILE__).'/ripcord_';
+            $root = dirname(__FILE__) . '/ripcord_';
             $class = substr($class, 8);
             $file = str_replace('.', '', $class);
             $file = str_replace('_', '/', $file);
             $file = strtolower($file);
             while ($file && $file != '.') {
-                if (file_exists($root.$file.'.php')) {
-                    require_once $root.$file.'.php';
+                if (file_exists($root . $file . '.php')) {
+                    require_once $root . $file . '.php';
 
                     return true;
                 } else {
@@ -268,8 +268,8 @@ class Ripcord
      * This method creates a new Ripcord_Client_Call object, which encodes the information needed for
      * a method call to an rpc server. This is mostly used for the system.multiCall method.
      *
-     * @param  string  $method  The name of the method call to encode
-     * @param  mixed  $args,...  The remainder of the arguments are encoded as parameters to the call
+     * @param string $method The name of the method call to encode
+     * @param mixed $args,... The remainder of the arguments are encoded as parameters to the call
      * @return object
      */
     public static function encodeCall()

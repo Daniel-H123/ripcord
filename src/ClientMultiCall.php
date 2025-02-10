@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Ripcord;
+namespace Danielh\Ripcord;
 
 /**
  * This class provides the fetch interface for system.multiCall. It is returned

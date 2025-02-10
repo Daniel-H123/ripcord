@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Ripcord;
+namespace Danielh\Ripcord;
 
 /**
  *  This class is used with the Ripcord_Client when calling system.multiCall. Instead of immediately calling the method on the rpc server,
@@ -33,8 +33,8 @@ class ClientCall
     /**
      * The constructor for the Ripcord_Client_Call class.
      *
-     * @param  string  $method  The name of the rpc method to call
-     * @param  array  $params  The parameters for the rpc method.
+     * @param string $method The name of the rpc method to call
+     * @param array $params The parameters for the rpc method.
      */
     public function __construct($method, $params)
     {
@@ -47,7 +47,7 @@ class ClientCall
      * When the method call's result is available, the php variable will be filled with
      * this result.
      *
-     * @param  mixed  $bound  The variable to bind the result from this call to.
+     * @param mixed $bound The variable to bind the result from this call to.
      * @return object Returns this object for chaining.
      */
     public function bind(&$bound)
@@ -66,7 +66,7 @@ class ClientCall
     {
         return [
             'methodName' => $this->method,
-            'params' => (array) $this->params,
+            'params' => (array)$this->params,
         ];
     }
 }

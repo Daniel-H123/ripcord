@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Ripcord;
+namespace Danielh\Ripcord;
 
-use App\Ripcord\Contracts\Transport;
-use App\Ripcord\Exceptions\TransportException;
+use Danielh\Ripcord\Contracts\Transport;
+use Danielh\Ripcord\Exceptions\TransportException;
 
 /**
  * This class implements the Ripcord_Transport interface using CURL.
@@ -28,7 +28,7 @@ class TransportCURL implements Transport
     /**
      * This is the constructor for the Ripcord_Transport_CURL class.
      *
-     * @param  array  $curlOptions  A list of CURL options.
+     * @param array $curlOptions A list of CURL options.
      */
     public function __construct($curlOptions = null)
     {
@@ -44,8 +44,8 @@ class TransportCURL implements Transport
     /**
      * This method posts the request to the given url
      *
-     * @param  string  $url  The url to post to.
-     * @param  string  $request  The request to post.
+     * @param string $url The url to post to.
+     * @param string $request The request to post.
      * @return string The server response
      *
      * @throws TransportException (ripcord::cannotAccessURL) when the given URL cannot be accessed for any reason.
@@ -53,13 +53,13 @@ class TransportCURL implements Transport
     public function post($url, $request)
     {
         $curl = curl_init();
-        $options = (array) $this->options + [
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_URL => $url,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $request,
-            CURLOPT_HEADER => true,
-        ];
+        $options = (array)$this->options + [
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_URL => $url,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $request,
+                CURLOPT_HEADER => true,
+            ];
         curl_setopt_array($curl, $options);
         $contents = curl_exec($curl);
         $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
@@ -71,12 +71,12 @@ class TransportCURL implements Transport
             $errorMessage = curl_error($curl);
             curl_close($curl);
             $version = explode('.', phpversion());
-            if (! $this->_skipPreviousException) { // previousException supported in php >= 5.3
-                $exception = new TransportException('Could not access '.$url, ripcord::cannotAccessURL, new Exception($errorMessage, $errorNumber)
+            if (!$this->_skipPreviousException) { // previousException supported in php >= 5.3
+                $exception = new TransportException('Could not access ' . $url, ripcord::cannotAccessURL, new Exception($errorMessage, $errorNumber)
                 );
             } else {
-                $exception = new TransportException('Could not access '.$url
-                    .' ( original CURL error: '.$errorMessage.' ) ',
+                $exception = new TransportException('Could not access ' . $url
+                    . ' ( original CURL error: ' . $errorMessage . ' ) ',
                     ripcord::cannotAccessURL
                 );
             }

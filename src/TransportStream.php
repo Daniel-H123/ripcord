@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Ripcord;
+namespace Danielh\Ripcord;
 
-use App\Ripcord\Contracts\Transport;
-use App\Ripcord\Exceptions\TransportException;
+use Danielh\Ripcord\Contracts\Transport;
+use Danielh\Ripcord\Exceptions\TransportException;
 
 /**
  * This class implements the Ripcord_Transport interface using PHP streams.
@@ -23,7 +23,7 @@ class TransportStream implements Transport
     /**
      * This is the constructor for the Ripcord_Transport_Stream class.
      *
-     * @param  array  $contextOptions  Optional. An array with stream context options.
+     * @param array $contextOptions Optional. An array with stream context options.
      */
     public function __construct($contextOptions = null)
     {
@@ -35,8 +35,8 @@ class TransportStream implements Transport
     /**
      * This method posts the request to the given url.
      *
-     * @param  string  $url  The url to post to.
-     * @param  string  $request  The request to post.
+     * @param string $url The url to post to.
+     * @param string $request The request to post.
      * @return string The server response
      *
      * @throws TransportException (ripcord::cannotAccessURL) when the given URL cannot be accessed for any reason.
@@ -56,8 +56,8 @@ class TransportStream implements Transport
         $context = stream_context_create($options);
         $result = @file_get_contents($url, false, $context);
         $this->responseHeaders = $http_response_header;
-        if (! $result) {
-            throw new TransportException('Could not access '.$url,
+        if (!$result) {
+            throw new TransportException('Could not access ' . $url,
                 ripcord::cannotAccessURL);
         }
 

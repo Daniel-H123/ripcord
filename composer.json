@@ -1,0 +1,10 @@
+{
+    "name": "danielh/ripcord",
+    "description": "Ripcord is a very easy to use XML-RPC library for PHP.",
+    "autoload": {
+        "psr-4": {
+            "Danielh\\Ripcord\\": "src/"
+        }
+    },
+    "require": {}
+}

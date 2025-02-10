@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Ripcord\Contracts;
+namespace Danielh\Ripcord\Contracts;
 
 /**
  * This interface defines the minimum methods any documentor needs to implement.

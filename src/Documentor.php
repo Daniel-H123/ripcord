@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Ripcord;
+namespace Danielh\Ripcord;
 
-use App\Ripcord\Contracts\IDocumentor;
+use Danielh\Ripcord\Contracts\IDocumentor;
 
 /**
  * Ripcord is an easy to use XML-RPC library for PHP.
@@ -182,7 +182,7 @@ class Documentor implements IDocumentor
     /**
      * The constructor for the Ripcord_Documentor class.
      *
-     * @param  array  $options.  Optional. Allows you to set the public properties of this class upon construction.
+     * @param array $options .  Optional. Allows you to set the public properties of this class upon construction.
      */
     public function __construct($options = null, $docCommentParser = null)
     {
@@ -198,7 +198,7 @@ class Documentor implements IDocumentor
     /**
      * This method fills the list of method data with all the user supplied methods of the rpc server.
      *
-     * @param  array  $methodData  A list of methods with name and callback information.
+     * @param array $methodData A list of methods with name and callback information.
      */
     public function setMethodData($methodData): void
     {
@@ -208,23 +208,23 @@ class Documentor implements IDocumentor
     /**
      * This method handles any request which isn't a valid rpc request.
      *
-     * @param  object  $rpcServer  A reference to the active rpc server.
+     * @param object $rpcServer A reference to the active rpc server.
      */
     public function handle($rpcServer): void
     {
         $methods = $rpcServer->call('system.listMethods');
         echo '<!DOCTYPE html>';
-        echo '<html><head><title>'.$this->name.'</title>';
+        echo '<html><head><title>' . $this->name . '</title>';
         if (isset($this->css)) {
             if (strpos($this->css, "\n") !== false) {
-                echo '<style type="text/css">'.$this->css.'</style>';
+                echo '<style type="text/css">' . $this->css . '</style>';
             } else {
-                echo '<link rel="stylesheet" type="text/css" href="'.$this->css.'">';
+                echo '<link rel="stylesheet" type="text/css" href="' . $this->css . '">';
             }
         }
         echo '</head><body>';
         echo '<div class="content">';
-        echo '<h1>'.$this->name.'</h1>';
+        echo '<h1>' . $this->name . '</h1>';
         echo $this->header;
         echo '<p>';
         $showWSDL = false;
@@ -248,10 +248,10 @@ class Documentor implements IDocumentor
         if ($showWSDL && ($this->wsdl || $this->wsdl2)) {
             echo '<ul>';
             if ($this->wsdl) {
-                echo '<li><a href="'.$this->root.'?wsdl">WSDL 1.1 Description</a></li>';
+                echo '<li><a href="' . $this->root . '?wsdl">WSDL 1.1 Description</a></li>';
             }
             if ($this->wsdl2) {
-                echo '<li><a href="'.$this->root.'?wsdl2">WSDL 2.0 Description</a></li>';
+                echo '<li><a href="' . $this->root . '?wsdl2">WSDL 2.0 Description</a></li>';
             }
             echo '</ul>';
         }
@@ -272,7 +272,7 @@ class Documentor implements IDocumentor
 
         echo '<div class="index"><h2>Methods</h2><ul>';
         foreach ($allMethods as $methodName => $methodIndex) {
-            echo '<li><a href="#method_'.(int) $methodIndex.'">'.$methodName.'</a></li>';
+            echo '<li><a href="#method_' . (int)$methodIndex . '">' . $methodName . '</a></li>';
         }
         echo '</ul></div>';
 
@@ -287,25 +287,25 @@ class Documentor implements IDocumentor
             }
             if ($currentClass != $class) {
                 echo '</div>';
-                echo '<div class="class_'.$class.'">';
+                echo '<div class="class_' . $class . '">';
                 $currentClass = $class;
             }
-            echo '<h2 id="method_'.$methodIndex.'">'.$method['name'].'</h2>';
+            echo '<h2 id="method_' . $methodIndex . '">' . $method['name'] . '</h2>';
             if (isset($method['signatures'])) {
 
                 foreach ($method['signatures'] as $signature) {
                     echo '<div class="signature">';
                     if (is_array($signature['returns'])) {
                         $return = $signature['returns'][0];
-                        echo '('.$return['type'].') ';
+                        echo '(' . $return['type'] . ') ';
                     }
-                    echo $method['name'].'(';
+                    echo $method['name'] . '(';
                     $paramInfo = false;
                     if (is_array($signature['params'])) {
                         $paramInfo = $signature['params'];
                         $params = '';
                         foreach ($signature['params'] as $param) {
-                            $params .= ', ('.$param['type'].') '.$param['name'].' ';
+                            $params .= ', (' . $param['type'] . ') ' . $param['name'] . ' ';
                         }
                         echo substr($params, 1);
                     }
@@ -314,8 +314,8 @@ class Documentor implements IDocumentor
                         echo '<div class="params"><h3>Parameters</h3><ul>';
                         foreach ($paramInfo as $param) {
                             echo '<li class="param">';
-                            echo '<label>('.$param['type'].') '.$param['name'].'</label> ';
-                            echo '<span>'.$param['description'].'</span>';
+                            echo '<label>(' . $param['type'] . ') ' . $param['name'] . '</label> ';
+                            echo '<span>' . $param['description'] . '</span>';
                             echo '</li>';
                         }
                         echo '</ul></div>';
@@ -325,13 +325,13 @@ class Documentor implements IDocumentor
             }
 
             if ($method['purpose']) {
-                echo '<div class="purpose">'.$method['purpose'].'</div>';
+                echo '<div class="purpose">' . $method['purpose'] . '</div>';
             }
 
             if (isset($method['notes']) && is_array($method['notes'])) {
                 echo '<div class="notes"><h3>Notes</h3><ol>';
                 foreach ($method['notes'] as $note) {
-                    echo '<li><span>'.$note.'</span></li>';
+                    echo '<li><span>' . $note . '</span></li>';
                 }
                 echo '</ol></div>';
             }
@@ -343,9 +343,9 @@ class Documentor implements IDocumentor
                 foreach ($method['see'] as $link => $description) {
                     echo '<li>';
                     if (isset($allMethods[$link])) {
-                        echo '<a href="#method_'.(int) $allMethods[$link].'">'.$link.'</a> <span>'.$description.'</span>';
+                        echo '<a href="#method_' . (int)$allMethods[$link] . '">' . $link . '</a> <span>' . $description . '</span>';
                     } else {
-                        echo '<span>'.$link.' '.$description.'</span>';
+                        echo '<span>' . $link . ' ' . $description . '</span>';
                     }
                     echo '</li>';
                 }
@@ -390,8 +390,8 @@ class Documentor implements IDocumentor
                     }
                 }
                 if ($description) {
-                    $description = '<p>'.str_replace(["\r\n\r\n", "\n\n"], '</p><p>', $description)
-                        .'</p>';
+                    $description = '<p>' . str_replace(["\r\n\r\n", "\n\n"], '</p><p>', $description)
+                        . '</p>';
                 }
                 if (is_array($data)) {
                     foreach ($data as $key => $value) {
@@ -399,8 +399,8 @@ class Documentor implements IDocumentor
                             case 'category':
                             case 'deprecated':
                             case 'package':
-                                $description .= '<div class="'.$key.'"><span class="tag">'
-                                    .$key.'</span>'.$value.'</div>';
+                                $description .= '<div class="' . $key . '"><span class="tag">'
+                                    . $key . '</span>' . $value . '</div>';
                                 break;
 
                             default:
@@ -408,8 +408,8 @@ class Documentor implements IDocumentor
                         }
                     }
                 }
-                $xml .= '<methodDescription name="'.$method.'"><purpose><![CDATA['
-                    .$description.']]></purpose>';
+                $xml .= '<methodDescription name="' . $method . '"><purpose><![CDATA['
+                    . $description . ']]></purpose>';
                 if (is_array($data) && (isset($data['arguments']) || isset($data['return']))) {
                     $xml .= '<signatures><signature>';
                     if (isset($data['arguments']) && is_array($data['arguments'])) {
@@ -418,15 +418,15 @@ class Documentor implements IDocumentor
                             if ($name[0] == '$') {
                                 $name = substr($name, 1);
                             }
-                            $xml .= '<value type="'.htmlspecialchars($argument['type'])
-                                .'" name="'.htmlspecialchars($name).'"><![CDATA['.$argument['description']
-                                .']]></value>';
+                            $xml .= '<value type="' . htmlspecialchars($argument['type'])
+                                . '" name="' . htmlspecialchars($name) . '"><![CDATA[' . $argument['description']
+                                . ']]></value>';
                         }
                         $xml .= '</params>';
                     }
                     if (isset($data['return']) && is_array($data['return'])) {
-                        $xml .= '<returns><value type="'.htmlspecialchars($data['return']['type'])
-                        .'"><![CDATA['.$data['return']['description'].']]></value></returns>';
+                        $xml .= '<returns><value type="' . htmlspecialchars($data['return']['type'])
+                            . '"><![CDATA[' . $data['return']['description'] . ']]></value></returns>';
                     }
                     $xml .= '</signature></signatures>';
                 }
@@ -448,7 +448,7 @@ interface Ripcord_Documentor_Parser
     /**
      * This method parses a given docComment block and returns an array with information.
      *
-     * @param  string  $commentBlock  The docComment block.
+     * @param string $commentBlock The docComment block.
      * @return array The parsed information.
      */
     public function parse($commentBlock);
@@ -463,7 +463,7 @@ class Ripcord_Documentor_Parser_phpdoc implements Ripcord_Documentor_Parser
     /**
      * This method parses a given docComment block and returns an array with information.
      *
-     * @param  string  $commentBlock  The docComment block.
+     * @param string $commentBlock The docComment block.
      * @return array The parsed information.
      */
     public function parse($commentBlock)
@@ -491,10 +491,10 @@ class Ripcord_Documentor_Parser_phpdoc implements Ripcord_Documentor_Parser
             switch ($this->currentTag) {
                 case 'param':
                     if (preg_match('/^\s*([[:alpha:]|]+)\s([[:alnum:]$_]+)(.*)$/i', $line, $matches)) {
-                        if (! isset($info['arguments'])) {
+                        if (!isset($info['arguments'])) {
                             $info['arguments'] = [];
                         }
-                        if (! isset($info['arguments'][$matches[2]])) {
+                        if (!isset($info['arguments'][$matches[2]])) {
                             $info['arguments'][$matches[2]] = ['description' => ''];
                         }
                         $info['arguments'][$matches[2]]['type'] = $matches[1];
@@ -504,7 +504,7 @@ class Ripcord_Documentor_Parser_phpdoc implements Ripcord_Documentor_Parser
                     break;
                 case 'return':
                     if (preg_match('/^\s*([[:alpha:]|]+)\s(.*)$/i', $line, $matches)) {
-                        if (! isset($info['return'])) {
+                        if (!isset($info['return'])) {
                             $info['return'] = ['description' => ''];
                         }
                         $info['return']['type'] = $matches[1];
@@ -514,17 +514,17 @@ class Ripcord_Documentor_Parser_phpdoc implements Ripcord_Documentor_Parser
                     break;
             }
         }
-        if (! $handled) {
+        if (!$handled) {
             switch ($this->currentTag) {
                 case 'param' :
                 case 'return' :
-                    if (! isset($info[$this->currentTag])) {
+                    if (!isset($info[$this->currentTag])) {
                         $info[$this->currentTag] = [];
                     }
                     $info[$this->currentTag]['description'] .= $this->parseDescription($line);
                     break;
                 default:
-                    if (! isset($info[$this->currentTag])) {
+                    if (!isset($info[$this->currentTag])) {
                         $info[$this->currentTag] = '';
                     }
                     $info[$this->currentTag] .= $this->parseDescription($line);

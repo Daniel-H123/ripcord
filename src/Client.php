@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Ripcord;
+namespace Danielh\Ripcord;
 
-use App\Ripcord\Exceptions\ConfigurationException;
-use App\Ripcord\Exceptions\InvalidArgumentException;
-use App\Ripcord\Exceptions\RemoteException;
+use Danielh\Ripcord\Exceptions\ConfigurationException;
+use Danielh\Ripcord\Exceptions\InvalidArgumentException;
+use Danielh\Ripcord\Exceptions\RemoteException;
 
 /**
  * Ripcord is an easy to use XML-RPC library for PHP.
@@ -19,7 +19,7 @@ use App\Ripcord\Exceptions\RemoteException;
 /**
  * Includes the static ripcord factory class and exceptions
  */
-require_once dirname(__FILE__).'/Ripcord.php';
+require_once dirname(__FILE__) . '/Ripcord.php';
 
 /**
  * This class implements a simple RPC client, for XML-RPC, (simplified) SOAP 1.1 or Simple RPC. The client abstracts
@@ -127,18 +127,18 @@ class Client
     /**
      * The constructor for the RPC client.
      *
-     * @param  string  $url  The url of the rpc server
-     * @param  array|null  $options  Optional. A list of outputOptions. See {@link Server::setOutputOption()}
-     * @param  null  $transport
-     * @param  null  $rootClient  Optional. Used internally when using namespaces.
+     * @param string $url The url of the rpc server
+     * @param array|null $options Optional. A list of outputOptions. See {@link Server::setOutputOption()}
+     * @param null $transport
+     * @param null $rootClient Optional. Used internally when using namespaces.
      *
      * @throws ConfigurationException (ripcord::xmlrpcNotInstalled) when the xmlrpc extension is not available.
      */
     public function __construct($url, ?array $options = null, $transport = null, $rootClient = null)
     {
-        if (! isset($rootClient)) {
+        if (!isset($rootClient)) {
             $rootClient = $this;
-            if (! function_exists('xmlrpc_encode_request')) {
+            if (!function_exists('xmlrpc_encode_request')) {
                 throw new ConfigurationException('PHP XMLRPC library is not installed',
                     ripcord::xmlrpcNotInstalled);
             }
@@ -174,15 +174,15 @@ class Client
     public function __call($name, $args)
     {
         if (isset($this->_namespace)) {
-            $name = $this->_namespace.'.'.$name;
+            $name = $this->_namespace . '.' . $name;
         }
 
         if ($name === 'system.multiCall' || $name == 'system.multicall') {
-            if (! $args || (is_array($args) && count($args) == 0)) {
+            if (!$args || (is_array($args) && count($args) == 0)) {
                 // multiCall is called without arguments, so return the fetch interface object
                 return new ClientMultiCall($this->_rootClient, $name);
             } elseif (is_array($args) && (count($args) == 1) &&
-                is_array($args[0]) && ! isset($args[0]['methodName'])) {
+                is_array($args[0]) && !isset($args[0]['methodName'])) {
                 // multicall is called with a simple array of calls.
                 $args = $args[0];
             }
@@ -190,10 +190,10 @@ class Client
             $params = [];
             $bound = [];
             foreach ($args as $key => $arg) {
-                if (! is_a($arg, 'Ripcord_Client_Call') &&
-                    (! is_array($arg) || ! isset($arg['methodName']))) {
+                if (!is_a($arg, 'Ripcord_Client_Call') &&
+                    (!is_array($arg) || !isset($arg['methodName']))) {
                     throw new InvalidArgumentException(
-                        'Argument '.$key.' is not a valid Ripcord call',
+                        'Argument ' . $key . ' is not a valid Ripcord call',
                         ripcord::notRipcordCall);
                 }
                 if (is_a($arg, 'Ripcord_Client_Call')) {
@@ -204,7 +204,7 @@ class Client
                     $params[] = [
                         'methodName' => $arg['methodName'],
                         'params' => isset($arg['params']) ?
-                            (array) $arg['params'] : [],
+                            (array)$arg['params'] : [],
                     ];
                 }
                 $bound[$key] = $arg;
@@ -271,7 +271,7 @@ class Client
      * property is automatically created as a new instance of the rpc client, with the name of the property
      * as a namespace.
      *
-     * @param  string  $name  The name of the namespace
+     * @param string $name The name of the namespace
      * @return object A Ripcord Client with the given namespace set.
      *
      * @throws ConfigurationException
@@ -279,12 +279,12 @@ class Client
     public function __get($name)
     {
         $result = null;
-        if (! isset($this->{$name})) {
+        if (!isset($this->{$name})) {
             $result = new Client(
                 $this->_url,
                 array_merge($this->_outputOptions, [
                     'namespace' => $this->_namespace ?
-                        $this->_namespace.'.'.$name : $name,
+                        $this->_namespace . '.' . $name : $name,
                 ]),
                 $this->_transport,
                 $this->_rootClient

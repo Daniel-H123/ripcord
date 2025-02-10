@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Ripcord\Contracts;
+namespace Danielh\Ripcord\Contracts;
 
 /**
  * This interface describes the minimum interface needed for the transport object used by the

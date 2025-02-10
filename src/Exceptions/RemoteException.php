@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Ripcord\Exceptions;
+namespace Danielh\Ripcord\Exceptions;
 
-use App\Ripcord\Contracts\RipcordException;
+use Danielh\Ripcord\Contracts\RipcordException;
 use Exception;
 
 /**

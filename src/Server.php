@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Ripcord;
+namespace Danielh\Ripcord;
 
-use App\Ripcord\Exceptions\BadMethodCallException;
-use App\Ripcord\Exceptions\ConfigurationException;
-use App\Ripcord\Exceptions\InvalidArgumentException;
+use Danielh\Ripcord\Exceptions\BadMethodCallException;
+use Danielh\Ripcord\Exceptions\ConfigurationException;
+use Danielh\Ripcord\Exceptions\InvalidArgumentException;
 use ReflectionClass;
 use ReflectionObject;
 
@@ -50,7 +50,6 @@ use ReflectionObject;
  * name of a PHP class to use. In addition you may also specify functions or methods directly, in any format
  * that matches PHP's is_callable() criteria.
  */
-
 /*
     TODO:
     - create seperate interface for encoding / decoding requests
@@ -59,6 +58,7 @@ use ReflectionObject;
     - pass list of protocol parsers/generators in the constructor of the server
     - protocol must know how to handle the system.* methods
 */
+
 class Server
 {
     /**
@@ -97,9 +97,9 @@ class Server
     /**
      * Creates a new instance of the Ripcord server.
      *
-     * @param  mixed  $services.  Optional. An object or array of objects. The public methods in these objects will be exposed
+     * @param mixed $services .  Optional. An object or array of objects. The public methods in these objects will be exposed
      *                            through the RPC server. If the services array has non-numeric keys, the key for each object will define its namespace.
-     * @param  array  $options.  Optional. Allows you to override the default server settings. Accepted key names are:
+     * @param array $options .  Optional. Allows you to override the default server settings. Accepted key names are:
      *                           - 'documentor': allows you to specify an alternative HTML documentor class, or if set to false, no HTML documentor.
      *                           - 'name'      : The name of the server, used by the default HTML documentor.
      *                           - 'css'       : An url of a css file to link to in the HTML documentation.
@@ -109,12 +109,12 @@ class Server
      *
      * @throws InvalidArgumentException (ripcord::unknownServiceType) when passed an incorrect service
      * @throws ConfigurationException (ripcord::xmlrpcNotInstalled) when the xmlrpc extension in not available.
-     *@see Server::setOutputOption()
+     * @see Server::setOutputOption()
      *
      */
     public function __construct($services = null, $options = null, $documentor = null)
     {
-        if (! function_exists('xmlrpc_server_create')) {
+        if (!function_exists('xmlrpc_server_create')) {
             throw new ConfigurationException('PHP XMLRPC library is not installed',
                 ripcord::xmlrpcNotInstalled);
         }
@@ -142,8 +142,8 @@ class Server
     /**
      * Allows you to add a service to the server after construction.
      *
-     * @param  object  $service  The object or class whose public methods must be added to the rpc server. May also be a function or method.
-     * @param  string  $serviceName  Optional. The namespace for the methods.
+     * @param object $service The object or class whose public methods must be added to the rpc server. May also be a function or method.
+     * @param string $serviceName Optional. The namespace for the methods.
      *
      * @throws InvalidArgumentException (ripcord::unknownServiceType) when passed an incorrect service
      */
@@ -158,10 +158,10 @@ class Server
 
             return;
         } else {
-            throw new InvalidArgumentException('Unknown service type '.$serviceName,
+            throw new InvalidArgumentException('Unknown service type ' . $serviceName,
                 ripcord::unknownServiceType);
         }
-        if ($serviceName && ! is_numeric($serviceName)) {
+        if ($serviceName && !is_numeric($serviceName)) {
             $serviceName .= '.';
         } else {
             $serviceName = '';
@@ -170,8 +170,8 @@ class Server
         if (is_array($methods)) {
             foreach ($methods as $method) {
                 if (substr($method->name, 0, 1) != '_'
-                    && ! $method->isPrivate() && ! $method->isProtected()) {
-                    $rpcMethodName = $serviceName.$method->name;
+                    && !$method->isPrivate() && !$method->isProtected()) {
+                    $rpcMethodName = $serviceName . $method->name;
                     $this->addMethod(
                         $rpcMethodName,
                         [$service, $method->name]
@@ -184,8 +184,8 @@ class Server
     /**
      * Allows you to add a single method to the server after construction.
      *
-     * @param  string  $name  The name of the method as exposed through the rpc server
-     * @param  callable  $method  The name of the method to call, or an array with classname or object and method name.
+     * @param string $name The name of the method as exposed through the rpc server
+     * @param callable $method The name of the method to call, or an array with classname or object and method name.
      */
     public function addMethod($name, $method)
     {
@@ -205,16 +205,16 @@ class Server
             $this->documentor->setMethodData($this->methods);
         }
         $request_xml = file_get_contents('php://input');
-        if (! $request_xml) {
+        if (!$request_xml) {
             if (($query = $_SERVER['QUERY_STRING'])
                 && isset($this->wsdl[$query]) && $this->wsdl[$query]) {
                 header('Content-type: text/xml');
                 header('Access-Control-Allow-Origin: *');
                 $wsdl = $this->wsdl[$query];
-                header('Content-Length: '.strlen($wsdl));
+                header('Content-Length: ' . strlen($wsdl));
                 echo $wsdl;
             } elseif ($this->documentor) {
-                header('Content-type: text/html; charset='.$this->outputOptions['encoding']);
+                header('Content-type: text/html; charset=' . $this->outputOptions['encoding']);
                 $this->documentor->handle($this, $this->methods);
             } else {
                 // FIXME: add check for json-rpc protocol, if set and none of the xml protocols are set, use that
@@ -225,7 +225,7 @@ class Server
                     ripcord::fault(-1, 'No request xml found.'),
                     $this->outputOptions
                 );
-                header('Content-Length: '.strlen($result));
+                header('Content-Length: ' . strlen($result));
                 echo $result;
             }
         } else {
@@ -233,7 +233,7 @@ class Server
             header('Content-type: text/xml');
             header('Access-Control-Allow-Origin: *');
             $result = $this->handle($request_xml);
-            header('Content-Length: '.strlen($result));
+            header('Content-Length: ' . strlen($result));
             echo $result;
         }
     }
@@ -245,7 +245,7 @@ class Server
     private function parseRequest($request_xml)
     {
         $xml = @simplexml_load_string($request_xml);
-        if (! $xml && ! $xml->getNamespaces()) {
+        if (!$xml && !$xml->getNamespaces()) {
             // FIXME: check for protocol json-rpc
             //simplexml in combination with namespaces (soap) lets $xml evaluate to false
             return xmlrpc_encode_request(
@@ -258,7 +258,7 @@ class Server
             $methodCall = $xml->xpath('//methodCall');
             if ($methodCall) { //xml-rpc
                 $methodName = $xml->xpath('//methodName');
-                if (! $methodName) {
+                if (!$methodName) {
                     return xmlrpc_encode_request(
                         null,
                         ripcord::fault(-3, 'Invalid Method Call - No methodName given'),
@@ -309,13 +309,13 @@ class Server
     /**
      * Handles the given request xml
      *
-     * @param  string  $request_xml  The incoming request.
+     * @param string $request_xml The incoming request.
      * @return string
      */
     public function handle($request_xml)
     {
         $result = $this->parseRequest($request_xml);
-        if (! $result || ripcord::isFault($result)) {
+        if (!$result || ripcord::isFault($result)) {
             return $result;
         } else {
             $method = $result['methodName'];
@@ -344,8 +344,8 @@ class Server
     /**
      * Calls a method by its rpc name.
      *
-     * @param  string  $method  The rpc name of the method
-     * @param  array  $args  The arguments to this method
+     * @param string $method The rpc name of the method
+     * @param array $args The arguments to this method
      * @return mixed
      *
      * @throws InvalidArgumentException (ripcord::cannotRecurse) when passed a recursive multiCall
@@ -371,7 +371,7 @@ class Server
 
                 return xmlrpc_decode($result);
             } else {
-                throw new BadMethodCallException('Method '.$method.' not found.',
+                throw new BadMethodCallException('Method ' . $method . ' not found.',
                     ripcord::methodNotFound);
             }
         }
@@ -380,8 +380,8 @@ class Server
     /**
      * Allows you to set specific output options of the server after construction.
      *
-     * @param  string  $option  The name of the option
-     * @param  mixed  $value  The value of the option
+     * @param string $option The name of the option
+     * @param mixed $value The value of the option
      *                        The options are:
      *                        - output_type: Return data as either php native data or xml encoded. Can be either 'php' or 'xml'. 'xml' is the default.
      *                        - verbosity: Determines the compactness of generated xml. Can be either 'no_white_space', 'newlines_only' or 'pretty'.
